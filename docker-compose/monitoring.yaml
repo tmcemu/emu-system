@@ -46,7 +46,7 @@ services:
             GF_SECURITY_ADMIN_PASSWORD: "${EMU_GRAFANA_ADMIN_PASSWORD}"
             GF_SECURITY_CSRF_TRUSTED_ORIGINS: "${EMU_DOMAIN},localhost"
             GF_SERVER_DOMAIN: "${EMU_DOMAIN}"
-            GF_SERVER_ROOT_URL: "https://${EMU_DOMAIN}/grafana"
+            GF_SERVER_ROOT_URL: "${EMU_GRAFANA_URL}"
         networks:
             - net
 
