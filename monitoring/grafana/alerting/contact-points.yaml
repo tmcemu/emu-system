@@ -1,0 +1,25 @@
+apiVersion: 1
+
+contactPoints:
+    -   orgId: 1
+        name: telegram_infrastructure
+        receivers:
+            -   uid: telegram_infrastructure
+                type: telegram
+                settings:
+                    bottoken: '8386883771:AAHla_tuDP7RHABpNi1ta0ai6GMD6EZVTfk'
+                    chatid: "-1003041223347"
+                    message_thread_id: '35'
+                    message: |
+                        {{ if eq .Status "firing" }}<b>🚨 Проблемы на сервре</b>{{ else }}<b>🟢 Проблемы на сервре миновали</b>{{ end }}
+                        
+                        {{ range .Alerts -}}
+                        <b>Алерт:</b> <code>{{ .Labels.alertname }}</code>
+                        <b>Время:</b> <code>{{ .StartsAt.Format "15:04:05" }}</code>
+                        <b>Уровень:</b> <code>{{ .Labels.severity }}</code>
+                        
+                        {{ .Annotations.description }}
+                        {{ end }}
+                    parse_mode: 'HTML'
+                    disable_notifications: false
+                disableResolveMessage: false

@@ -1,0 +1,20 @@
+networks:
+    net:
+        name: net
+        external: true  # Создается в docker-compose.db.yaml
+
+services:
+    emu-backend:
+        build:
+            context: "../../${EMU_BACKEND_CONTAINER_NAME}"
+            dockerfile: "${EMU_BACKEND_DOCKERFILE_DIR}/Dockerfile"
+        container_name: "${EMU_BACKEND_CONTAINER_NAME}"
+        env_file:
+            - "../env/.env.app"
+            - "../env/.env.db"
+            - "../env/.env.monitoring"
+        ports:
+            - "${EMU_BACKEND_PORT}:${EMU_BACKEND_PORT}"
+        restart: unless-stopped
+        networks:
+            - net
