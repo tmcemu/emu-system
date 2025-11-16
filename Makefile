@@ -18,6 +18,7 @@ deploy:
 	@apt install python3-pip git make
 	@pip install requests --break-system-packages
 	@cd ..
+	@git clone git@github.com:tmcemu/emu-system.git
 	@git clone git@github.com:tmcemu/emu-frontend.git
 	@git clone git@github.com:tmcemu/emu-backend.git
 	@cd emu-system

@@ -20,7 +20,7 @@ BACKUP_ALL_SCRIPT="${SCRIPT_DIR}/pg_backup_all.sh"
 CRON_SCHEDULE="0 3 * * *"
 
 # Имя для идентификации задачи в crontab
-CRON_MARKER="# loom-postgresql-backup"
+CRON_MARKER="# emu-postgresql-backup"
 
 # Цвета для вывода
 COLOR_RESET='\033[0m'

@@ -31,8 +31,8 @@ send_telegram() {
     local message="$1"
     if [[ -x "${TG_ALERT_SCRIPT}" ]]; then
         # Явно передаем переменные окружения в Python процесс
-        LOOM_ALERT_TG_BOT_TOKEN="${LOOM_ALERT_TG_BOT_TOKEN}" \
-        LOOM_ALERT_TG_CHAT_ID="${LOOM_ALERT_TG_CHAT_ID}" \
+        EMU_ALERT_TG_BOT_TOKEN="${EMU_ALERT_TG_BOT_TOKEN}" \
+        EMU_ALERT_TG_CHAT_ID="${EMU_ALERT_TG_CHAT_ID}" \
         python3 "${TG_ALERT_SCRIPT}" "${message}" || log "WARN" "Failed to send Telegram notification"
     else
         log "WARN" "Telegram alert script not found or not executable: ${TG_ALERT_SCRIPT}"
@@ -104,8 +104,8 @@ if [[ ! -f "${ENV_DIR}/.env.db" ]]; then
 fi
 
 # Определение переменных
-CONTAINER_VAR="LOOM_${INSTANCE_UPPER}_POSTGRES_CONTAINER_NAME"
-VOLUME_VAR="LOOM_${INSTANCE_UPPER}_POSTGRES_VOLUME_DIR"
+CONTAINER_VAR="EMU_${INSTANCE_UPPER}_POSTGRES_CONTAINER_NAME"
+VOLUME_VAR="EMU_${INSTANCE_UPPER}_POSTGRES_VOLUME_DIR"
 
 CONTAINER_NAME="${!CONTAINER_VAR:-}"
 VOLUME_DIR="${!VOLUME_VAR:-}"
