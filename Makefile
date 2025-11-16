@@ -18,11 +18,12 @@ deploy:
 	@apt install python3-pip git make
 	@pip install requests --break-system-packages
 	@cd ..
-	@git clone git@github.com:LoomAI-IT/emu-frontend.git
-	@git clone git@github.com:LoomAI-IT/emu-backend.git
+	@git clone git@github.com:tmcemu/emu-frontend.git
+	@git clone git@github.com:tmcemu/emu-backend.git
 	@cd emu-system
 	@./infrastructure/nginx/install.sh
 	@./infrastructure/docker/install.sh
+	@mkdir -p backups/postgresql/backend logs script/backup
 	@mkdir -p volumes/{grafana,loki,tempo,redis,postgresql,victoria-metrics}
 	@mkdir -p volumes/redis/monitoring
 	@mkdir -p volumes/weed
@@ -69,3 +70,29 @@ rebuild-monitoring: update-all set-env-to-config-template
 rebuild-db: update-all set-env-to-config-template
 	@docker compose -f ./docker-compose/db.yaml down
 	@docker compose -f ./docker-compose/db.yaml up -d --build
+
+backup:
+	@echo "Starting backup for all PostgreSQL instances..."
+	@./script/backup/pg_backup_all.sh
+
+backup-backend:
+	@echo "Starting backup for backend instance..."
+	@./script/backup/pg_backup.sh backend
+
+list-backups:
+	@./script/backup/pg_list_backups.sh
+
+restore:
+	@if [ -z "$(INSTANCE)" ] || [ -z "$(BACKUP)" ]; then \
+		echo "Error: INSTANCE and BACKUP parameters are required"; \
+		echo "Usage: make restore INSTANCE=<instance> BACKUP=<path_to_backup>"; \
+		echo "Example: make restore INSTANCE=backend BACKUP=backups/postgresql/backend/backend_backup_20250112_030000.tar.gz"; \
+		exit 1; \
+	fi
+	@echo "Starting restore for instance: $(INSTANCE)"
+	@echo "Backup file: $(BACKUP)"
+	@./script/backup/pg_restore.sh $(INSTANCE) $(BACKUP)
+
+install-backup-cron:
+	@echo "Installing cron job for automatic backups..."
+	@./script/backup/install_cron.sh
